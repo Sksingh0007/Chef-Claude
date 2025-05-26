@@ -2,7 +2,7 @@ import React from "react";
 import "../App.css";
 import IngredientList from "./IngredientList.jsx";
 import ClaudeRecipe from "./ClaudeRecipe.jsx";
-import "../ai.js";
+import { getRecipeFromMistral } from "../ai.js";
 
 export default function Main() {
   function handleSubmit(formData) {
@@ -11,16 +11,13 @@ export default function Main() {
   }
 
   const [ingredients, setIngredients] = React.useState([
-    "masala",
-    "chicken",
-    "rice",
-    "eggs",
   ]);
 
-  const [recipeShown, setRecipeShown] = React.useState("false");
+  const [recipeShown, setRecipeShown] = React.useState(false);
   async function getRecipe() {
     const recipeMarkdowm = await getRecipeFromMistral(ingredients);
-    console.log(recipeMarkdowm);
+      console.log(recipeMarkdowm);
+      setRecipeShown(true);
   }
 
   return (

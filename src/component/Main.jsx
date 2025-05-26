@@ -2,7 +2,7 @@ import React from "react";
 import "../App.css";
 import IngredientList from "./IngredientList.jsx";
 import ClaudeRecipe from "./ClaudeRecipe.jsx";
-import { getRecipeFromMistral } from "../ai.js";
+import  { getRecipeFromMistral } from "../ai.js";
 
 export default function Main() {
   function handleSubmit(formData) {

@@ -4,7 +4,7 @@ export default function Header() {
   return (
       <header className='header'>
           <img src={icon} alt="icon" className='icon' />
-        <h1>Chef Claude</h1>
+        <h1 className='bg-cyan-400'>Chef Claude</h1>
     </header>
   );
 }

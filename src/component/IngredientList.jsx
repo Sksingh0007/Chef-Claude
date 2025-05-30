@@ -1,6 +1,17 @@
+
+
 export default function IngredientList(props) {
 
-    const display = props.ingredients.map((i) => <li key={i}>{i}</li>);
+  const display = props.ingredients.map((i, index) => (
+    <li key= {index} >
+      <div className="delete">
+        {i}
+        <div className="cancel" onClick={() => props.handleDelete(i)}>
+        ❌
+        </div>
+      </div>
+    </li>
+  ));
 
   return (
     <section className="section">

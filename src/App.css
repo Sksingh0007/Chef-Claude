@@ -121,3 +121,12 @@ body {
 .get-recipie button:hover {
   background-color: #c86539;
 }
+
+.delete{
+  display: flex;
+  justify-content: space-between;
+}
+
+.cancel:hover{
+ cursor: pointer;
+}

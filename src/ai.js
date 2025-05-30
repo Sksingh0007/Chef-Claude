@@ -1,28 +1,41 @@
-import { HfInference } from "@huggingface/inference";
+import axios from "axios";
 
-const SYSTEM_PROMPT = `
-You are an assistant that receives a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include additional ingredients they didn't mention, but try not to include too many extra ingredients. Format your response in markdown to make it easier to render to a web page
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // Replace with your real key
+const GEMINI_API_URL = import.meta.env.VITE_GEMINI_API_URL;
+
+export const getRecipeFromIngredients = async (ingredients) => {
+  const ingredientsString = ingredients.join(", ");
+
+  const SYSTEM_PROMPT = `
+You are an assistant that receives a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include additional ingredients they didn't mention, but try not to include too many extra ingredients. Format your response in markdown to make it easier to render to a web page.
 `;
 
-// for HF_ACCESS_TOKEN
-const hf = new HfInference(import.meta.env.VITE_HF_ACCESS_TOKEN);
+  const USER_CONTENT = `I have ${ingredientsString}. Please give me a recipe you'd recommend I make!;`
 
-export async function getRecipeFromMistral(ingredientsArr) {
-  const ingredientsString = ingredientsArr.join(", ");
   try {
-    const response = await hf.chatCompletion({
-      model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        {
-          role: "user",
-          content: `I have ${ingredientsString}. Please give me a recipe you'd recommend I make!`,
+    const response = await axios.post(
+      `${ GEMINI_API_URL }?key=${ GEMINI_API_KEY }`,
+      {
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: `${SYSTEM_PROMPT}\n${USER_CONTENT}` }],
+          },
+        ],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
         },
-      ],
-      max_tokens: 1024,
-    });
-    return response.choices[0].message.content;
-  } catch (err) {
-    console.error(err.message);
+      }
+    );
+
+    const recipe = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    return recipe || "No recipe found.";
+  } 
+  catch (error) {
+    console.error("Gemini API error:", error);
+    return "Failed to fetch recipe.";
   }
-}
+};
+

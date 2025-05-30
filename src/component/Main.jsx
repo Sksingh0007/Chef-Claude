@@ -2,36 +2,45 @@ import React from "react";
 import "../App.css";
 import IngredientList from "./IngredientList.jsx";
 import ClaudeRecipe from "./ClaudeRecipe.jsx";
-import  { getRecipeFromMistral } from "../ai.js";
+import { getRecipeFromIngredients } from "../ai.js";
 
 export default function Main() {
+
   function handleSubmit(formData) {
     const newIngredient = formData.get("ingredient");
     setIngredients((prev) => [...prev, newIngredient]);
   }
 
   const [ingredients, setIngredients] = React.useState([
+    "rice","chicekn", "tomato", "onion",
   ]);
 
-  const [recipeShown, setRecipeShown] = React.useState(false);
+  const [recipe, setRecipe] = React.useState();
+
   async function getRecipe() {
-    const recipeMarkdowm = await getRecipeFromMistral(ingredients);
-      console.log(recipeMarkdowm);
-      setRecipeShown(true);
+    const recipeMarkdowm = await getRecipeFromIngredients(ingredients);
+    setRecipe(recipeMarkdowm);
+    console.log(recipeMarkdowm);
+  }
+
+  function handleDelete(ing) {
+    setIngredients((prev) => prev.filter((i) => i !== ing));
   }
 
   return (
+ 
     <main>
+      
       <form className="main" action={handleSubmit}>
         <input type="text" placeholder="e.g. oregeno" name="ingredient" />
         <button>+ Add ingredient</button>
       </form>
 
       {ingredients.length > 0 && (
-        <IngredientList ingredients={ingredients} getRecipe={getRecipe} />
+        <IngredientList ingredients={ingredients} getRecipe={getRecipe} handleDelete={ handleDelete } />
       )}
 
-      {recipeShown && <ClaudeRecipe />}
+      {recipe && <ClaudeRecipe recipe={recipe} />}
     </main>
   );
 }

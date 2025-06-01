@@ -16,11 +16,21 @@ export default function Main() {
   ]);
 
   const [recipe, setRecipe] = React.useState();
+  const recipeSection = React.useRef(null);
+
+  //scroll to recipe section when it is generated
+  React.useEffect(() => {
+    if (recipe !== null && recipeSection.current !== null){
+      recipeSection.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+}, [recipe])
 
   async function getRecipe() {
     const recipeMarkdowm = await getRecipeFromIngredients(ingredients);
     setRecipe(recipeMarkdowm);
-    console.log(recipeMarkdowm);
   }
 
   function handleDelete(ing) {
@@ -37,7 +47,7 @@ export default function Main() {
       </form>
 
       {ingredients.length > 0 && (
-        <IngredientList ingredients={ingredients} getRecipe={getRecipe} handleDelete={ handleDelete } />
+        <IngredientList ingredients={ingredients} getRecipe={getRecipe} handleDelete={handleDelete} reference={ recipeSection} />
       )}
 
       {recipe && <ClaudeRecipe recipe={recipe} />}

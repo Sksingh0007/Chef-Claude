@@ -19,7 +19,7 @@ export default function IngredientList(props) {
       <ul>{display}</ul>
       {props.ingredients.length > 3 && (
         <div className="get-recipie">
-          <div>
+          <div ref={props.reference}>
             <h3>Ready for a recipe?</h3>
             <p>Generate a recipie form a list of ingredients.</p>
           </div>

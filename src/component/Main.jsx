@@ -11,9 +11,7 @@ export default function Main() {
     setIngredients((prev) => [...prev, newIngredient]);
   }
 
-  const [ingredients, setIngredients] = React.useState([
-    "rice","chicekn", "tomato", "onion",
-  ]);
+  const [ingredients, setIngredients] = React.useState([]);
 
   const [recipe, setRecipe] = React.useState();
   const recipeSection = React.useRef(null);
@@ -45,6 +43,7 @@ export default function Main() {
         <input type="text" placeholder="e.g. oregeno" name="ingredient" />
         <button>+ Add ingredient</button>
       </form>
+      
 
       {ingredients.length > 0 && (
         <IngredientList ingredients={ingredients} getRecipe={getRecipe} handleDelete={handleDelete} reference={ recipeSection} />
